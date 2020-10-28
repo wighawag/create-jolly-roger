@@ -1,0 +1,28 @@
+{
+  "name": "create-jolly-roger",
+  "version": "0.1.0",
+  "description": "Create Jolly-Roger based Ethereum App",
+  "bin": {
+    "create-jolly-roger": "cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wighawag/create-jolly-roger.git"
+  },
+  "keywords": [
+    "ethereum",
+    "applicatiom",
+    "template",
+    "smart",
+    "contracts"
+  ],
+  "author": "Ronan Sandford",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wighawag/create-jolly-roger/issues"
+  },
+  "homepage": "https://github.com/wighawag/create-jolly-roger#readme"
+}
