@@ -1,6 +1,6 @@
 {
   "name": "create-jolly-roger",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "description": "Create a full-stack onchain app with Jolly-Roger (SvelteKit + Hardhat v3 + Rocketh)",
   "type": "module",
   "bin": {
