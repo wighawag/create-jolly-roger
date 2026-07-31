@@ -1,6 +1,6 @@
 # create-jolly-roger
 
-Scaffold a full-stack onchain app with [Jolly-Roger](https://github.com/wighawag/jolly-roger) — SvelteKit 5, Hardhat v3, and the Rocketh deployment system.
+Scaffold a full-stack onchain app from the [Jolly-Roger](https://github.com/wighawag/jolly-roger) template — SvelteKit 5, Hardhat v3, and the Rocketh deployment system.
 
 ## Quick start
 
@@ -14,7 +14,7 @@ Or with a specific project name:
 pnpm create jolly-roger my-awesome-app
 ```
 
-This creates a new directory with your project, runs `git init`, and leaves you ready to:
+This fetches the latest template from `jolly-roger` main, substitutes your project name everywhere, initializes git, and leaves you ready to:
 
 ```bash
 cd my-awesome-app
@@ -22,18 +22,15 @@ pnpm i
 pnpm start
 ```
 
-## What you get
-
-A monorepo with two packages:
-
-- **`contracts/`** — Solidity contracts, Hardhat v3, Rocketh deploy scripts, Foundry tests, named accounts, proxy deployment, viem integration.
-- **`web/`** — SvelteKit 5 frontend with Tailwind CSS 4, shadcn-svelte, PWA setup, IPFS-compatible static adapter, auto-generated contract deployments.
-
-Plus zellij layouts for full local development, attaching to existing deployments, and remote-chain development.
-
 ## How it works
 
-`create-jolly-roger` copies the [jolly-roger](https://github.com/wighawag/jolly-roger) template into your project directory and substitutes the project name everywhere it appears (package names, GitHub URLs, IPFS deploy targets, display names).
+The CLI fetches the [jolly-roger](https://github.com/wighawag/jolly-roger) repo's `main` branch at runtime using [`degit`](https://github.com/Rich-Harris/degit) — no bundled template, always up to date. It then substitutes the project name in:
+
+- Package names (`jolly-roger`, `jolly-roger-web`, `jolly-roger-contracts`)
+- Display names (`Jolly Roger` → title case)
+- E2E test regexes
+
+You can also just `git clone` jolly-roger directly — this package is just a convenience that renames everything for you.
 
 ## License
 

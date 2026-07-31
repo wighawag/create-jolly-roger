@@ -5,17 +5,11 @@ import {
 	mkdirSync,
 	readFileSync,
 	writeFileSync,
-	cpSync,
 	statSync,
 	readdirSync,
-	rmSync,
 } from 'node:fs';
 import { join, resolve, relative } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = join(__filename, '..');
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -39,19 +33,6 @@ function replaceInText(text, replacements) {
 		result = result.split(pattern).join(replacement);
 	}
 	return result;
-}
-
-/**
- * Process a single file: read, replace, write back.
- */
-function processFile(filePath, replacements) {
-	const content = readFileSync(filePath, 'utf-8');
-	const newContent = replaceInText(content, replacements);
-	if (newContent !== content) {
-		writeFileSync(filePath, newContent, 'utf-8');
-		return true;
-	}
-	return false;
 }
 
 // ---------------------------------------------------------------------------
@@ -79,12 +60,12 @@ function buildReplacements(projectName) {
 
 		// Case-insensitive regex in e2e tests: /jolly roger/i
 		// Replace hyphens with spaces, keep lowercase (regex is case-insensitive)
-		['/jolly roger/i', `/${projectName.replace(/-/g, ' ')}\/i`],
+		['/jolly roger/i', `/${projectName.replace(/-/g, ' ')}/i`],
 	];
 }
 
 // ---------------------------------------------------------------------------
-// Directories / files to skip during processing
+// Directories / files to skip during name substitution
 // ---------------------------------------------------------------------------
 
 const SKIP_DIRS = new Set([
@@ -134,6 +115,24 @@ function processAllFiles(dir, replacements) {
 }
 
 // ---------------------------------------------------------------------------
+// Fetch template via degit
+// ---------------------------------------------------------------------------
+
+async function fetchTemplate(targetDir) {
+	const degit = (await import('degit')).default;
+	const emitter = degit('wighawag/jolly-roger#main', {
+		cache: false,
+		force: false,
+	});
+	emitter.on('info', (info) => {
+		if (info.code !== 'SUCCESS') {
+			log(`  ${info.message}`);
+		}
+	});
+	await emitter.clone(targetDir);
+}
+
+// ---------------------------------------------------------------------------
 // CLI
 // ---------------------------------------------------------------------------
 
@@ -153,7 +152,7 @@ async function main() {
 					type: 'text',
 					name: 'projectName',
 					message: 'Project name (kebab-case):',
-					initial: 'my-jolly-roger-app',
+					initial: 'my-onchain-app',
 					validate: (val) =>
 						/^[a-z0-9]+(-[a-z0-9]+)*$/.test(val) ||
 						'Project name must be kebab-case (e.g. my-awesome-app)',
@@ -162,7 +161,7 @@ async function main() {
 			projectName = response.projectName;
 		} catch {
 			error(
-				'Please provide a project name: npx create-jolly-roger <project-name>',
+				'Please provide a project name: pnpm create jolly-roger <project-name>',
 			);
 		}
 	}
@@ -187,37 +186,19 @@ async function main() {
 	}
 
 	log('');
-	log(`Creating a new Jolly-Roger project: ${projectName}`);
+	log(`Creating a new project: ${projectName}`);
 	log(`Target: ${relative(process.cwd(), targetDir) || projectName}`);
 	log('');
 
 	// -----------------------------------------------------------------------
-	// Copy template
+	// Fetch template from jolly-roger main
 	// -----------------------------------------------------------------------
-	const templateDir = join(__dirname, 'template');
-	if (!existsSync(templateDir)) {
-		error(`Template directory not found at ${templateDir}`);
+	log('Fetching template from jolly-roger main...');
+	try {
+		await fetchTemplate(targetDir);
+	} catch (e) {
+		error(`Failed to fetch template: ${e.message}`);
 	}
-
-	log('Copying template...');
-	mkdirSync(targetDir, { recursive: true });
-
-	function copyTemplateDir(src, dest) {
-		mkdirSync(dest, { recursive: true });
-		for (const entry of readdirSync(src)) {
-			if (SKIP_DIRS.has(entry)) continue;
-			const srcPath = join(src, entry);
-			const destPath = join(dest, entry);
-			const st = statSync(srcPath);
-			if (st.isDirectory()) {
-				copyTemplateDir(srcPath, destPath);
-			} else {
-				cpSync(srcPath, destPath, { force: true });
-			}
-		}
-	}
-
-	copyTemplateDir(templateDir, targetDir);
 
 	// -----------------------------------------------------------------------
 	// Name substitution

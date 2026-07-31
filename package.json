@@ -31,10 +31,10 @@
     "access": "public"
   },
   "files": [
-    "cli.js",
-    "template"
+    "cli.js"
   ],
   "dependencies": {
+    "degit": "^2.8.4",
     "prompts": "^2.4.2"
   }
 }
