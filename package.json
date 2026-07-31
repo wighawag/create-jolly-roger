@@ -1,28 +1,33 @@
 {
   "name": "create-jolly-roger",
   "version": "0.1.0",
-  "description": "Create Jolly-Roger based Ethereum App",
+  "description": "Create a full-stack onchain app with Jolly-Roger (SvelteKit + Hardhat v3 + Rocketh)",
+  "type": "module",
   "bin": {
     "create-jolly-roger": "cli.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "ethereum",
+    "sveltekit",
+    "hardhat",
+    "template",
+    "smart-contracts",
+    "create"
+  ],
+  "author": "Ronan Sandford",
+  "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wighawag/create-jolly-roger.git"
   },
-  "keywords": [
-    "ethereum",
-    "applicatiom",
-    "template",
-    "smart",
-    "contracts"
-  ],
-  "author": "Ronan Sandford",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/wighawag/create-jolly-roger/issues"
   },
-  "homepage": "https://github.com/wighawag/create-jolly-roger#readme"
+  "homepage": "https://github.com/wighawag/create-jolly-roger#readme",
+  "dependencies": {
+    "prompts": "^2.4.2"
+  }
 }
