@@ -27,6 +27,13 @@
     "url": "https://github.com/wighawag/create-jolly-roger/issues"
   },
   "homepage": "https://github.com/wighawag/create-jolly-roger#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "cli.js",
+    "template"
+  ],
   "dependencies": {
     "prompts": "^2.4.2"
   }
